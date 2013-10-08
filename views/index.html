@@ -1,0 +1,92 @@
+<html>
+<head>
+   <title>RasPi-RC</title>
+   <script src="../scripts/jquery-1.10.2.min.js"></script>
+   <script type="text/javascript">
+   		function serverCommand(command){
+   			console.log("send "+command+" to server");
+   			jQuery.get('../'+command, function(data){console.log(command+' returned');});	
+   		}
+		$(document).ready(function(){
+			$(".ctrl").click(function(event){
+				serverCommand($(this).attr("value"));
+			});
+		});
+		
+		var left=false;
+		var right=false;
+		var forward=false;
+		var reverse=false;
+		$(window).keydown(function(e){
+			switch(e.keyCode){
+				case 37://left
+					if(!left){
+						serverCommand('left');						
+						left=true;
+					}
+					break;
+				case 38://up
+					if(!forward){
+						serverCommand('forward');
+						forward=true;
+					}
+					break;
+				case 39://right
+					if(!right){
+						serverCommand('right');
+						right=true;
+					}
+					break;
+				case 40://down
+					if(!reverse){
+						serverCommand('reverse');
+						reverse=true;
+					}
+					break;
+			}
+		});
+		$(window).keyup(function(e){
+			switch(e.keyCode){
+				case 37://left
+					if(!right){
+						serverCommand('straight');
+					}
+					left=false;
+					break;
+				case 38://up
+					if(!reverse){
+						serverCommand('stop');
+					}
+					forward=false;
+					break;
+				case 39://right
+					if(!left){
+						serverCommand('straight');
+					}
+					right=false;
+					break;
+				case 40://down
+					if(!forward){
+						serverCommand('stop');
+					}
+					reverse=false;
+					break;
+			}
+		});
+   </script>
+</head>
+<body>
+   <h1>RasPi-RC</h1>  
+
+	<br>
+	<a class="ctrl" id='btn_left' href="#" value="left">Left</a>
+	<a class="ctrl" id='btn_straight' href="#" value="straight">Straight</a>
+	<a class="ctrl" id='btn_right' href="#" value="right">Right</a>
+	<br><br>
+	<a class="ctrl" id='btn_forward' href="#" value="forward">Forward</a>
+	<a class="ctrl" id='btn_stop' href="#" value="stop">Stop</a>
+	<a class="ctrl" id='btn_reverse' href="#" value="reverse">Reverse</a>
+
+</body>
+</html>
+
